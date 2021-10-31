@@ -17,10 +17,10 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         await client.connect()
-        console.log('connected')
         const database = client.db('travel')
         const servicesCollection = database.collection('services')
         const userCollection = database.collection('users')
+        const orderCollection = database.collection('orders')
 
 
         app.get('/services', async (req,res)=>{
@@ -30,8 +30,19 @@ async function run(){
             
         })
 
-        app.post('/products/bykeys',async (req,res)=>{
-           
+        // my orders
+        app.get('/my-orders/:email', async (req,res)=>{
+            const email = req.params.email
+            const cursor = orderCollection.find({useremail:email})
+            const result = await cursor.toArray()
+            res.json(result) 
+            
+        })
+
+        app.post('/service/order',async (req,res)=>{
+            const bookedItem = req.body
+            const result = await orderCollection.insertOne(bookedItem)
+            res.json(result)
         })
     }
     finally{
