@@ -45,9 +45,26 @@ async function run(){
             const query = {_id : ObjectId(id)}
             const result = await orderCollection.deleteOne(query)
             res.json(result)
+        })
 
+        // all orders
+
+        app.get('/all-orders', async (req,res)=>{
+            const cursor = orderCollection.find({})
+            const result = await cursor.toArray()
+            res.json(result) 
             
         })
+
+        app.delete('/all-orders/:id', async (req,res)=>{
+            const id = req.params.id
+            const query = {_id : ObjectId(id)}
+            const result = await orderCollection.deleteOne(query)
+            res.json(result)
+        })
+
+
+        //
 
         app.post('/service/order',async (req,res)=>{
             const bookedItem = req.body
