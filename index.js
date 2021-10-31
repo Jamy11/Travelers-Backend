@@ -20,7 +20,6 @@ async function run(){
         await client.connect()
         const database = client.db('travel')
         const servicesCollection = database.collection('services')
-        const userCollection = database.collection('users')
         const orderCollection = database.collection('orders')
 
 
@@ -64,11 +63,18 @@ async function run(){
         })
 
 
-        //
+        // order service
 
         app.post('/service/order',async (req,res)=>{
             const bookedItem = req.body
             const result = await orderCollection.insertOne(bookedItem)
+            res.json(result)
+        })
+
+        // adding service
+        app.post('/service/add',async (req,res)=>{
+            const data = req.body
+            const result = await servicesCollection.insertOne(data)
             res.json(result)
         })
     }
